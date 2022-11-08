@@ -1,8 +1,13 @@
 .vscode/
 Introduccion_SNMP-master/
 __pycache__/
-*.png
+icmp.png
+multicast.png
+segmentos.png
+paquetesIp.png
+datagramas.png
 pruebas.py
 segmentosRed.rrd
 segmentosRed.xml
 snmpd.conf
+*.txt
