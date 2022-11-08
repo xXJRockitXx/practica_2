@@ -4,19 +4,19 @@ import rrdtool
 from getSNMP import consultaSNMP
 while 1:
     paquetesMulticast = int(
-        consultaSNMP('LuisAlbertoGarcia','localhost',
+        consultaSNMP('JRockitDesk','localhost',
                      '1.3.6.1.2.1.2.2.1.17.1'))
     paquetesIp = int(
-        consultaSNMP('LuisAlbertoGarcia','localhost',
+        consultaSNMP('JRockitDesk','localhost',
                      '1.3.6.1.2.1.4.10.0'))
     icmpEnviados = int(
-        consultaSNMP('LuisAlbertoGarcia','localhost',
+        consultaSNMP('JRockitDesk','localhost',
                      '1.3.6.1.2.1.5.1.0'))
     tcpTransmitidos = int(
-        consultaSNMP('LuisAlbertoGarcia','localhost',
+        consultaSNMP('JRockitDesk','localhost',
                      '1.3.6.1.2.1.6.12.0'))
     datagramasEnviados = int(
-        consultaSNMP('LuisAlbertoGarcia','localhost',
+        consultaSNMP('JRockitDesk','localhost',
                      '1.3.6.1.2.1.7.4.0'))
     
     valor = "N:" + str(paquetesMulticast) + ':' + str(paquetesIp) + ':' + str(icmpEnviados) + ':' + str(tcpTransmitidos) + ':' + str(datagramasEnviados)

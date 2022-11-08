@@ -20,7 +20,7 @@ def consultaSNMP(comunidad,host,oid):
     return resultado
 
 #1. print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.2.2.1.12.2"))
-print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.7.4.0"))
+""" print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.7.4.0")) """
 
 
 
@@ -28,3 +28,5 @@ print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.7.4.0"))
 print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.2.2.1.6.2")) """
 """ snmpget -v1 -c LuisAlbertoGarcia localhost 1.3.6.1.2.1.2.2.1.6.1
 snmpget -v1 -c LuisAlbertoGarcia localhost 1.3.6.1.2.1.2.1.0 """
+
+""" snmpget -v1 -c JRockitDesk localhost 1.3.6.1.2.1.7.4.0 """

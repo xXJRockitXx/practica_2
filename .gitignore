@@ -3,3 +3,6 @@ Introduccion_SNMP-master/
 __pycache__/
 *.png
 pruebas.py
+segmentosRed.rrd
+segmentosRed.xml
+snmpd.conf
