@@ -1,0 +1,5 @@
+.vscode/
+Introduccion_SNMP-master/
+__pycache__/
+*.png
+pruebas.py
