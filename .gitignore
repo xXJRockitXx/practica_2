@@ -12,3 +12,6 @@ segmentosRed.xml
 snmpd.conf
 *.txt
 update.py
+graphRRD.py
+fetch.py
+getSNMP.py
