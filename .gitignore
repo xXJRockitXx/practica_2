@@ -11,3 +11,4 @@ segmentosRed.rrd
 segmentosRed.xml
 snmpd.conf
 *.txt
+update.py

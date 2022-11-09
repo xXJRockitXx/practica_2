@@ -6,6 +6,7 @@ import time
 from fpdf import FPDF
 from base64 import decode
 from datetime import datetime
+from pysnmp.hlapi import *
 
 class Agente:
     """ Clase para el manejo de los Agentes """
@@ -21,6 +22,10 @@ class Agente:
         """ Devolvemos el ip/hostname del agente """
         return self.hostname
 
+    def dato_comunidad(self):
+        """ Devolvemos el ip/hostname del agente """
+        return self.comunidad
+    
     def datos(self):
         """ Devolvemos datos del agente: ip/hostname, puerto, comunidad """
         datos = "IP/Hostname: " + self.ip_hostname() + "\nPuerto: " + str(
@@ -97,7 +102,7 @@ class Agente:
         insertar_txt(consultasTxt, self.obtener_nombre())
         insertar_txt(consultasTxt, self.obtener_contacto())
         insertar_txt(consultasTxt, self.obtener_ubicacion())
-        insertar_txt(consultasTxt,
+        """ insertar_txt(consultasTxt,
                      "\nNumero de interfaces: " + self.obtener_interfaces())
 
         insertar_txt(consultasTxt, "\nInterfaz ||| Estado")
@@ -120,7 +125,7 @@ class Agente:
                     self.obtener_desc(oidDesc) + " ||| TESTING")
 
             if i == 4:
-                break
+                break """
 
         consultasTxt.close()
 
@@ -234,8 +239,8 @@ def modificar_agente(agentes):
             datos = solicitar_datos()
             agente.modificar(**datos)
             break
-        else:
-            posicion += 1
+        """ else:
+            posicion += 1 """
 
     pausar()
 
@@ -329,6 +334,15 @@ def nueva_pagina(pdf):
     
     return pdf
 
+def insertar_graficas(pdf):
+    pdf.logo("escom.png", 2, 2, 35, 25)
+    pdf.logo("multicast.png", 20, 50, 70, 40)
+    pdf.logo("paquetesIp.png", 20, 95, 70, 40)
+    pdf.logo("icmp.png", 20, 140, 70, 40)
+    pdf.logo("segmentos.png", 20, 185, 70, 40)
+    pdf.logo("datagramas.png", 20, 230, 70, 40)
+    """ return pdf  """
+
     
 def generar_reporte(agentes):
     """ Buscamos el ip/hostname del agente seleccionado, agregamos
@@ -361,12 +375,13 @@ def generar_reporte(agentes):
 
     pdf = PDF()
     pdf.add_page()
-    pdf = nueva_pagina(pdf)
+    nueva_pagina(pdf)
     pdf.texto("agente.txt", 10.0, 60.0)
     pdf.texto("consultas.txt", 10.0, 90.0)
     pdf.set_author("Luis Alberto García Mejía")
     pdf.add_page()
     pdf = nueva_pagina(pdf)
+    insertar_graficas(pdf)
     pdf.output(
         "reporte_" + fecha_actual(now) + "_" + hora_actual(now) + ".pdf", 'F')
     print("\nReporte generado!")
@@ -419,6 +434,10 @@ while opcion != 5:
     if opcion == 1:
         """ Generamos un nuevo agente """
         crear_agente(agentes)
+        """ En una nueva terminal, comenzamos a almacenar los datos del agente """
+        """ os.system("kitty ./update.py " + datos_agente["hostname"] + " " + datos_agente["comunidad"]) """
+        """ os.system("kitty ./update.py " + agente.ip_hostname() + agente.dato_comunidad()) """
+        """ os.system("kitty ./update.py " + agentes[0].ip_hostname() + agentes[0].dato_comunidad()) """
 
     elif opcion == 2:
         """ Modificamos los datos de un agente """
