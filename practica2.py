@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import os
-import sys
 import rrdtool
 import time
 from fpdf import FPDF
@@ -10,7 +9,6 @@ from pysnmp.hlapi import *
 
 class Agente:
     """ Clase para el manejo de los Agentes """
-
     def __init__(self, hostname, puerto, comunidad, vSNMP):
         self.hostname = hostname
         self.puerto = puerto
@@ -21,10 +19,6 @@ class Agente:
     def ip_hostname(self):
         """ Devolvemos el ip/hostname del agente """
         return self.hostname
-
-    def dato_comunidad(self):
-        """ Devolvemos el ip/hostname del agente """
-        return self.comunidad
     
     def datos(self):
         """ Devolvemos datos del agente: ip/hostname, puerto, comunidad """
@@ -42,8 +36,7 @@ class Agente:
 
     def obtener_so(self):
         """ Hacemos una consulta para obtener el sistema operativo """
-        consulta = consultaSNMP(self.comunidad, self.hostname,
-                                "1.3.6.1.2.1.1.1.0")
+        consulta = consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.1.1.0")
 
         if (consulta == "Windows 10"):
             self.win = True
@@ -54,27 +47,23 @@ class Agente:
 
     def obtener_nombre(self):
         """ Hacemos una consulta para obtener el nombre del dispositivo """
-        consulta = consultaSNMP(self.comunidad, self.hostname,
-                                "1.3.6.1.2.1.1.5.0")
+        consulta = consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.1.5.0")
         return "\nNombre del dispositivo: " + consulta
 
     def obtener_contacto(self):
         """ Hacemos una consulta para obtener la información de contacto """
-        consulta = consultaSNMP(self.comunidad, self.hostname,
-                                "1.3.6.1.2.1.1.4.0")
+        consulta = consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.1.4.0")
         return "\nContacto: " + consulta
 
     def obtener_ubicacion(self):
         """ Hacemos una consulta para obtener ubicacion """
-        consulta = consultaSNMP(self.comunidad, self.hostname,
-                                "1.3.6.1.2.1.1.6.0")
+        consulta = consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.1.6.0")
         return "\nUbicacion: " + consulta
 
     def obtener_interfaces(self):
         """ Hacemos una consulta para obtener el número de interfaces
         y por cada interfaz, mostrar su estado administratico """
-        consulta = consultaSNMP(self.comunidad, self.hostname,
-                                "1.3.6.1.2.1.2.1.0")
+        consulta = consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.2.1.0")
         return consulta
 
     def obtener_desc(self, oid):
@@ -83,10 +72,8 @@ class Agente:
         consulta = consultaSNMP(self.comunidad, self.hostname, oid)
 
         if (self.win):
-            """ print("WINDOWS ALV") """
             consulta = consulta[2:]
             consulta = bytes.fromhex(consulta).decode("ASCII")
-        """ return "\n" + consulta """
         return consulta
 
     def obtener_status(self, oid):
@@ -102,8 +89,7 @@ class Agente:
         insertar_txt(consultasTxt, self.obtener_nombre())
         insertar_txt(consultasTxt, self.obtener_contacto())
         insertar_txt(consultasTxt, self.obtener_ubicacion())
-        """ insertar_txt(consultasTxt,
-                     "\nNumero de interfaces: " + self.obtener_interfaces())
+        insertar_txt(consultasTxt, "\nNumero de interfaces: " + self.obtener_interfaces())
 
         insertar_txt(consultasTxt, "\nInterfaz ||| Estado")
 
@@ -112,20 +98,17 @@ class Agente:
             oidStatus = "1.3.6.1.2.1.2.2.1.8." + str(i + 1)
 
             if (self.obtener_status(oidStatus) == "1"):
-                insertar_txt(
-                    consultasTxt, "\n" + str(i + 1) + ". " +
-                    self.obtener_desc(oidDesc) + " ||| UP")
+                insertar_txt(consultasTxt, "\n" + str(i + 1) + ". " +
+                            self.obtener_desc(oidDesc) + " ||| UP")
             elif (self.obtener_status(oidStatus) == "2"):
-                insertar_txt(
-                    consultasTxt, "\n" + str(i + 1) + ". " +
-                    self.obtener_desc(oidDesc) + " ||| DOWN")
+                insertar_txt(consultasTxt, "\n" + str(i + 1) + ". " +
+                            self.obtener_desc(oidDesc) + " ||| DOWN")
             else:
-                insertar_txt(
-                    consultasTxt, "\n" + str(i + 1) + ". " +
-                    self.obtener_desc(oidDesc) + " ||| TESTING")
+                insertar_txt(consultasTxt, "\n" + str(i + 1) + ". " +
+                            self.obtener_desc(oidDesc) + " ||| TESTING")
 
             if i == 4:
-                break """
+                break
 
         consultasTxt.close()
 
@@ -239,8 +222,6 @@ def modificar_agente(agentes):
             datos = solicitar_datos()
             agente.modificar(**datos)
             break
-        """ else:
-            posicion += 1 """
 
     pausar()
 
@@ -296,40 +277,27 @@ def consultaSNMP(comunidad, host, oid):
         return resultado
 
 
-def graficar(dato, imagen, vertical, titulo, ds, max, color, linea):
-    """ Comenzamos a graficar, mandamos toda la información para hacer una grafica con rrdtool """
-    tiempo_actual = int(time.time())
-    #Grafica desde el tiempo actual menos diez minutos
-    tiempo_inicial = tiempo_actual - 300
-
-    print("\nGraficando " + dato + "...", end="")
-    
+def graficar(dato, imagen, vertical, titulo, ds, max, color, linea, epochInicio, epochFinal):
+    """ Comenzamos a graficar, mandamos toda la información para hacer una grafica con rrdtool """   
     ret = rrdtool.graphv(imagen + ".png",
-                        "--start",str(tiempo_inicial),
-                        "--end","N",
+                        "--start",str(epochInicio),
+                        "--end",str(epochFinal),
                         "--vertical-label=" + vertical,
                         "--title=" + titulo,
                         "DEF:sDato=segmentosRed.rrd:" + ds + ":AVERAGE",
-                
                         "VDEF:sDatoLast=sDato,LAST",
-                        
                         "VDEF:segEntradaMax=sDato,MAXIMUM",
-                        
                         "CDEF:Nivel1=sDato,7,GT,0,sDato,IF",
                         "PRINT:sDatoLast:%6.2lf",
-                        
                         "GPRINT:segEntradaMax:%6.2lf %S " + max,
-                        
                         "LINE3:sDato" + color + ":" + linea)
-    
-    print("... Finalizado")
     
     
 def nueva_pagina(pdf):
     """ Generamos una nueva pagina, colocamos encabezado y datos """
     pdf.logo("escom.png", 2, 2, 35, 25)
     pdf.titulos("Administracion de Servicios en Red", 0.0, 0.0)
-    pdf.titulos("Practica 1", 0.0, 10.0)
+    pdf.titulos("Practica 2", 0.0, 10.0)
     pdf.titulos("Luis Alberto Garcia Mejia | 4CM13", 0.0, 20.0)
     
     return pdf
@@ -382,48 +350,58 @@ def generar_reporte(agentes):
     pdf.add_page()
     pdf = nueva_pagina(pdf)
     insertar_graficas(pdf)
-    pdf.output(
-        "reporte_" + fecha_actual(now) + "_" + hora_actual(now) + ".pdf", 'F')
+    pdf.output("reporte_" + fecha_actual(now) + "_" + hora_actual(now) + ".pdf", 'F')
     print("\nReporte generado!")
     borrar_txt()
     pausar()
     
 
-def generar_graficas():
+def generar_graficas(epochInicio, epochFinal):
     """ Generamos las 5 graficas corresponsientes a mi bloque """
     
     """ Graficamos Paquetes multicast que ha enviado la interfaz de la interfaz de red de un agente """
     graficar(
         "Paquetes multicast enviados", "multicast", "Paquetes", 
         "Paquetes multicast que ha enviado la \n interfaz de red de un agente",
-        "multiCastSalida", "maxPaq", "#FFC300", "Paquetes enviados")
-
+        "multiCastSalida", "maxPaq", "#FFC300", "Paquetes enviados", epochInicio, epochFinal)
 
     """ Graficamos Paquetes IP que los protocolos locales (incluyendo ICMP) suministraron a IP en las 
     solicitudes de transmisión. """
     graficar("Paquetes IP enviados", "paquetesIp", "Paquetes IP", 
             "Paquetes IP que los protocolos locales \n suministraron a IP en la transmisión",
-            "paquetesIpSalida", "maxPaq", "#2471a3", "Paquetes enviados")
-
+            "paquetesIpSalida", "maxPaq", "#2471a3", "Paquetes enviados", epochInicio, epochFinal)
 
     """ Graficamos Mensajes ICMP que ha recibido el agente. """
     graficar("Mensajes ICMP recibidos", "icmp", "Mensajes", 
             "Mensajes ICMP que ha recibido \n el agente",
-            "icmpEntrada", "maxMen", "#a93226", "Mensajes enviados")
-
+            "icmpEntrada", "maxMen", "#a93226", "Mensajes enviados", epochInicio, epochFinal)
 
     """ Graficamos Segmentos retransmitidos; es decir, el número de segmentos TCP transmitidos que 
     contienen uno o más octetos transmitidos previamente """
     graficar("Segmentos retransmitidos", "segmentos", "Segmentos", 
             "Segmentos TCP transmitidos que contienen \n uno o más octetos transmitidos previamente",
-            "segmentosSalida", "maxSeg", "#6c3483", "Segmentos retransmitidos")
-
+            "segmentosSalida", "maxSeg", "#6c3483", "Segmentos retransmitidos", epochInicio, epochFinal)
 
     """ Graficamos Datagramas enviados por el dispositivo """
     graficar("Datagramas enviados", "datagramas", "Datagramas", 
             "Datagramas que ha enviado el\n dispositivo",
-            "datagramasSalida", "maxDat", "#2471a3", "Datagramas enviados")
+            "datagramasSalida", "maxDat", "#2471a3", "Datagramas enviados", epochInicio, epochFinal)
 
+
+def solicitar_fecha(clave):
+    """ Solicitamos la fecha y hora al usuario, luego la convertimos a epoch """
+    limpiar_pantalla()
+    print("Ingresa la fecha y hora para el reporte (Y/m/d H:M:S)\n")
+    
+    if (clave == 1):
+        print("FECHA INICIAL")
+    else:
+        print("FECHA FINAL")
+    
+    fecha = input("Fecha: ")
+    epoch = int(datetime.strptime(fecha, "%Y/%m/%d %H:%M:%S").timestamp())
+    pausar()
+    return epoch
 
 """ Programa Principal """
 agentes = []
@@ -434,10 +412,6 @@ while opcion != 5:
     if opcion == 1:
         """ Generamos un nuevo agente """
         crear_agente(agentes)
-        """ En una nueva terminal, comenzamos a almacenar los datos del agente """
-        """ os.system("kitty ./update.py " + datos_agente["hostname"] + " " + datos_agente["comunidad"]) """
-        """ os.system("kitty ./update.py " + agente.ip_hostname() + agente.dato_comunidad()) """
-        """ os.system("kitty ./update.py " + agentes[0].ip_hostname() + agentes[0].dato_comunidad()) """
 
     elif opcion == 2:
         """ Modificamos los datos de un agente """
@@ -449,7 +423,9 @@ while opcion != 5:
 
     elif opcion == 4:
         """ Generamos un reporte en PDF """
-        generar_graficas()
+        epochInicio = solicitar_fecha(1)
+        epochFinal = solicitar_fecha(0)
+        generar_graficas(epochInicio, epochFinal)
         generar_reporte(agentes)
 
     opcion = desplegar_menu()

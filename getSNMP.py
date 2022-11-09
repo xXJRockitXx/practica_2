@@ -20,7 +20,14 @@ def consultaSNMP(comunidad,host,oid):
     return resultado
 
 #1. print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.2.2.1.12.2"))
-""" print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.7.4.0")) """
+print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.1.5.0"))
+print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.1.4.0"))
+print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.4.2.0"))
+print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.2.2.1.10.1"))
+print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.2.2.1.16.1"))
+print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.1.3.0"))
+print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.2.2.1.11.1"))
+print(consultaSNMP("LuisAlbertoGarcia","localhost","1.3.6.1.2.1.2.2.1.17.1"))
 
 
 
