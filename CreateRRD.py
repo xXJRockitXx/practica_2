@@ -2,7 +2,7 @@
 import rrdtool
 ret = rrdtool.create("segmentosRed.rrd",
                      "--start",'N',
-                     "--step",'150',
+                     "--step",'60',
                      "DS:multiCastSalida:COUNTER:120:U:U",
                      "DS:paquetesIpSalida:COUNTER:120:U:U",
                      "DS:icmpEntrada:COUNTER:120:U:U",

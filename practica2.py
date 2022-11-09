@@ -53,7 +53,7 @@ class Agente:
     def obtener_contacto(self):
         """ Hacemos una consulta para obtener la información de contacto """
         consulta = consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.1.4.0")
-        return "\nContacto: " + consulta
+        return "\n1: " + consulta
 
     def obtener_ubicacion(self):
         """ Hacemos una consulta para obtener ubicacion """
@@ -85,8 +85,30 @@ class Agente:
     def consultas_agente(self):
         consultasTxt = open("consultas.txt", "w")
 
-        insertar_txt(consultasTxt, self.obtener_so())
-        insertar_txt(consultasTxt, self.obtener_nombre())
+        insertar_txt(consultasTxt, "version: 1")
+        insertar_txt(consultasTxt, "\ndevice: server1")
+        insertar_txt(consultasTxt, "\ndescripcion: Accouting Server 1")
+        insertar_txt(consultasTxt, "\ndate: 2022-11-09")
+        insertar_txt(consultasTxt, "\ndefault protocol: Radius")
+        
+        insertar_txt(consultasTxt, "\nradte: 2022-11-08")
+        insertar_txt(consultasTxt, "\n#NAS-Ip address:")
+        insertar_txt(consultasTxt, "\n4:8.40.1.27")
+        insertar_txt(consultasTxt, "\n#NAS-Port-Type")
+        insertar_txt(consultasTxt, "\n5:61:2")
+        insertar_txt(consultasTxt, "\n#NAS-User-name")
+        insertar_txt(consultasTxt, self.obtener_contacto())
+        insertar_txt(consultasTxt, "\n#Acct-Status-Type:40:1")
+        insertar_txt(consultasTxt, "\n#Acct-Delay-Time:")
+        insertar_txt(consultasTxt, "\n" + consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.4.2.0"))
+        insertar_txt(consultasTxt, "\n#Acct-Input-Octets:")
+        insertar_txt(consultasTxt, "\n" + consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.2.2.1.10.1"))
+        insertar_txt(consultasTxt, "\n#Acct-Output-Octets:")
+        insertar_txt(consultasTxt, "\n" + consultaSNMP(self.comunidad, self.hostname, "1.3.6.1.2.1.2.2.1.16.1"))        
+        insertar_txt(consultasTxt, "\n#Acct-Session-Id:")
+        insertar_txt(consultasTxt, "\n#44:2")
+        
+        """ insertar_txt(consultasTxt, self.obtener_nombre())
         insertar_txt(consultasTxt, self.obtener_contacto())
         insertar_txt(consultasTxt, self.obtener_ubicacion())
         insertar_txt(consultasTxt, "\nNumero de interfaces: " + self.obtener_interfaces())
@@ -108,7 +130,7 @@ class Agente:
                             self.obtener_desc(oidDesc) + " ||| TESTING")
 
             if i == 4:
-                break
+                break """
 
         consultasTxt.close()
 
